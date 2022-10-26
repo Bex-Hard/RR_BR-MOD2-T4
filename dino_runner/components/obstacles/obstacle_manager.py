@@ -17,18 +17,16 @@ class ObstacleManager:
                 self.obstacles.append(Cactus(SMALL_CACTUS))
             elif random.randint(0,1) == 1:
                 self.obstacles.append(Large_cactus(LARGE_CACTUS))
-                
-
+        
         #generate the bird    
         if len(self.obstacles) == 0:
-            self.obstacles.append(Bird)
-            #self.obstacles.append(Bird(BIRD))
-            
+            self.obstacles.append(Bird(BIRD))
+           
             #bater as asas
             #if random.randint(0,1) == 0:
-                #self.obstacles.append(BIRD[0])
+                #self.obstacles.append(Bird(BIRD[0]))
             #elif random.randint(0,1) == 1:
-                #self.obstacles.append(BIRD[1])
+                #self.obstacles.append(Bird(BIRD[1]))
 
         for obstacle in self.obstacles:
             obstacle.update(game.game_speed, self.obstacles)
