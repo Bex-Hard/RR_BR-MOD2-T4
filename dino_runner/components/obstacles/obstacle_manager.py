@@ -11,22 +11,15 @@ class ObstacleManager:
         self.obstacles = []
     
     def update(self, game):
-        #generate the two kinds of cactus
+        #generate the two kinds of cactus and the bird
         if len(self.obstacles) == 0:
-            if random.randint(0,1) == 0:
+            if random.randint(0,2) == 0:
                 self.obstacles.append(Cactus(SMALL_CACTUS))
-            elif random.randint(0,1) == 1:
+            elif random.randint(0,2) == 1:
                 self.obstacles.append(Large_cactus(LARGE_CACTUS))
+            elif random.randint(0,2) == 2:
+                self.obstacles.append(Bird(BIRD))
         
-        #generate the bird    
-        if len(self.obstacles) == 0:
-            self.obstacles.append(Bird(BIRD))
-           
-            #bater as asas
-            #if random.randint(0,1) == 0:
-                #self.obstacles.append(Bird(BIRD[0]))
-            #elif random.randint(0,1) == 1:
-                #self.obstacles.append(Bird(BIRD[1]))
 
         for obstacle in self.obstacles:
             obstacle.update(game.game_speed, self.obstacles)
@@ -34,9 +27,13 @@ class ObstacleManager:
             #manage the colision
             if game.player.dino_rect.colliderect(obstacle.rect):
                 game.playing = False
+                game.count_death+=1
                 pygame.time.delay(500)
                 break
 
     def draw(self, screen):
         for obstacle in self.obstacles:
             obstacle.draw(screen)
+
+    def reset_obstacles(self):
+        self.obstacles = []
