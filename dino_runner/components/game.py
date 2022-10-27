@@ -4,8 +4,12 @@ import pygame
 from dino_runner.utils.constants import BG, ICON, RESET, SCREEN_HEIGHT, SCREEN_WIDTH, TITLE, FPS
 from dino_runner.components.dinossaur import Dinossaur
 from dino_runner.components.obstacles.obstacle_manager import ObstacleManager
+from dino_runner.components.power_ups.power_up_manager import PowerUpManager
+
 
 GAME_SPEED = 20
+X_POS_BG = 0
+Y_POS_BG = 380
 
 class Game:
     def __init__(self):
@@ -13,19 +17,26 @@ class Game:
         pygame.display.set_caption(TITLE)
         pygame.display.set_icon(ICON)
         self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-        
+
         self.player = Dinossaur()
         self.obstacle_manager = ObstacleManager()
-        
+        self.power_up_manager = PowerUpManager()
+
         self.score = 0
         self.count_death = 0
-
+        self.game_speed = GAME_SPEED
         self.clock = pygame.time.Clock()
+
+        user_input = pygame.key.get_pressed()
+        self.player.update(user_input)
+        self.obstacle_manager.update(self)
+        self.power_up_manager.update(self)
+
+       
         self.playing = False
         self.executing = False
-        self.game_speed = GAME_SPEED
-        self.x_pos_bg = 0
-        self.y_pos_bg = 380
+        self.x_pos_bg = X_POS_BG
+        self.y_pos_bg = Y_POS_BG
 
 
     def run(self):
@@ -35,7 +46,6 @@ class Game:
             self.events()
             self.update()
             self.draw()
-        #pygame.quit()
 
     def execute(self):
         self.executing = True
@@ -116,8 +126,6 @@ class Game:
 
         self.screen.blit(end_score, (end_score_rect.x, end_score_rect.y))
 
-
-
         pygame.display.update()
         self.events_on_menu()
 
@@ -140,7 +148,7 @@ class Game:
         user_input = pygame.key.get_pressed()
         self.player.update(user_input)
         self.obstacle_manager.update(self)
-
+        self.power_up_manager.update(self)
         self.update_score()
         self.update_game_speed()
         self.update_death
@@ -170,7 +178,8 @@ class Game:
 
         self.player.draw(self.screen)
         self.obstacle_manager.draw(self.screen)       
-        
+        self.power_up_manager.draw(self.screen)
+
         #draw score
         self.draw_score()
 
