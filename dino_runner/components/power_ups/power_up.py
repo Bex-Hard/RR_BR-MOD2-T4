@@ -6,21 +6,21 @@ import random
 Y_POS = 200
 
 class PowerUp(Sprite):
-    def __init__(self, image):
+    def __init__(self, image, type):
         self.image = image
-        self.type = SHIELD_TYPE
+        self.type = type
 
         self.rect = self.image.get_rect()
-        self.rect.x = SCREEN_WIDTH
-        self.rect.y = Y_POS
+        self.rect.x = SCREEN_WIDTH +random.randint(800,1000)
+        self.rect.y = random.randint(125, 175) #any position in y
         
         self.start_time = 0
-        self.duration = random.randint(125,175)
+        self.duration = random.randint(5, 10)
 
     def update(self, game_speed, power_ups):
         self.rect.x -= game_speed
 
-        if self.rect.x < self.rect.width:
+        if self.rect.x < - self.rect.width:
             power_ups.pop()
 
     def draw(self, screen):

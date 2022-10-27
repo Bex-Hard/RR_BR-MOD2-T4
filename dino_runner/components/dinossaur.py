@@ -15,7 +15,7 @@ DUCKING_IMG = {DEFAULT_TYPE: DUCKING, SHIELD_TYPE: DUCKING_SHIELD}
 class Dinossaur(Sprite):
     def __init__ (self):
         self.type = DEFAULT_TYPE
-        self.image = RUNNING_IMG[DEFAULT_TYPE][0]
+        self.image = RUNNING_IMG[self.type][0]
         
         self.dino_rect = self.image.get_rect()
         self.dino_rect.x = X_POS
@@ -31,7 +31,8 @@ class Dinossaur(Sprite):
     def setup_state(self):
         self.has_shield = False
         self.has_power_up = False
-        self.power_up_time = 0
+        #self.power_up_time = 0
+
         
     def run (self):
         if self.step_index<5:
@@ -46,21 +47,21 @@ class Dinossaur(Sprite):
 
 
     def update (self, user_input):
-        
-        if(self.power_up_time > 0):
-            self.power_up_time-=1000
-            self.type = SHIELD_TYPE
-        else: 
-            self.type = DEFAULT_TYPE
-            self.setup_state()
-
-        
         if self.dino_duck:
             self.duck()
         if self.dino_run:
             self.run()
         elif self.dino_jump:
             self.jump()
+
+        
+        #if(self.power_up_time > 0):
+            #self.power_up_time-=1000
+            #self.type = SHIELD_TYPE
+        #else: 
+            #self.type = DEFAULT_TYPE
+            #self.setup_state()
+
     
         if user_input[pygame.K_UP] and not self.dino_jump:
             self.dino_jump = True

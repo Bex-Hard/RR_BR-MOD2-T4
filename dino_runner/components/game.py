@@ -1,15 +1,20 @@
 from http.client import RESET_CONTENT
+from turtle import update
 import pygame
+import random
 
-from dino_runner.utils.constants import BG, ICON, RESET, SCREEN_HEIGHT, SCREEN_WIDTH, TITLE, FPS
+from dino_runner.utils.constants import BG, ICON, RESET, SCREEN_HEIGHT, SCREEN_WIDTH, TITLE, FPS, DEFAULT_TYPE
 from dino_runner.components.dinossaur import Dinossaur
 from dino_runner.components.obstacles.obstacle_manager import ObstacleManager
 from dino_runner.components.power_ups.power_up_manager import PowerUpManager
-
+from dino_runner.components.power_ups.power_up import PowerUp
 
 GAME_SPEED = 20
 X_POS_BG = 0
 Y_POS_BG = 380
+
+TEXT_RECT_X = 7
+TEXT_RECT_Y = 100
 
 class Game:
     def __init__(self):
@@ -22,6 +27,7 @@ class Game:
         self.obstacle_manager = ObstacleManager()
         self.power_up_manager = PowerUpManager()
 
+        #self.shield_count = False
         self.score = 0
         self.count_death = 0
         self.game_speed = GAME_SPEED
@@ -41,6 +47,7 @@ class Game:
 
     def run(self):
         # Game loop: events - update - draw
+        self.reset()
         self.playing = True
         while self.playing:
             self.events()
@@ -60,6 +67,28 @@ class Game:
         pygame.display.quit()
         pygame.quit()
 
+    def draw_power_up_time(self):
+        if self.player.has_power_up:
+            time_to_show = round((self.player.power_up_time - pygame.time.get_ticks())/1000,2)
+            if time_to_show >=0:
+                self.draw_time_to_screen(time_to_show)
+            else:
+                self.player.has_power_up = False
+                self.player.type = DEFAULT_TYPE
+    
+    def draw_time_to_screen(self, time_to_show):
+        font_size = 15
+        color = (0, 0, 0)
+        FONT = 'freesansbold.ttf'
+        font = pygame.font.Font(FONT, font_size)
+        
+        text_to_display = f"Power up remaining time: {time_to_show}"
+        text = font.render(text_to_display, True, color)
+        text_rect = text.get_rect()
+
+        text_rect.x = TEXT_RECT_X
+        text_rect.y = TEXT_RECT_Y
+        self.screen.blit(text, (text_rect.x, text_rect.y))
 
     def display_menu(self):
         self.screen.fill((255,255,255))
@@ -152,6 +181,7 @@ class Game:
         self.update_score()
         self.update_game_speed()
         self.update_death
+        self.update_game_speed()
 
     def update_score(self):
         self.score+= 1      #atualiza o score
@@ -169,7 +199,8 @@ class Game:
         self.score = 0
         self.game_speed = GAME_SPEED
         self.obstacle_manager.reset_obstacles()    #reseta os obstáculos
-
+        self.playing = True
+        self.power_up_manager.reset_power_up()
 
     def draw(self):
         self.clock.tick(FPS)
@@ -182,6 +213,8 @@ class Game:
 
         #draw score
         self.draw_score()
+
+        self.draw_power_up_time()
 
         pygame.display.update()
         pygame.display.flip()
@@ -202,6 +235,7 @@ class Game:
         score_text_rect.y = 30
 
         self.screen.blit(text, (score_text_rect.x, score_text_rect.y))
+    
 
     def reset_obstacles(self):
         self.obstacle_manager.reset_obstacles() #quando morre, os obstáculos são resetados

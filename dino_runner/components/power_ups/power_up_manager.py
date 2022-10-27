@@ -1,18 +1,32 @@
 from dino_runner.components.power_ups.shield import Shield
+import random
+import pygame
+
 
 class PowerUpManager:
     def __init__(self):
         self.power_ups = []
+        self.to_appears = 0
+
+    def generate_power_up(self,score):
+
+        if len(self.power_ups) == 0 and self.to_appears == score:
+            self.to_appears += random.randint(200, 300)
+            self.power_ups.append(Shield())
 
     def update(self, game):
-        if len(self.power_ups) == 0:
-            self.power_ups.append(Shield())
+        self.generate_power_up(game.score)
+
+        #if len(self.power_ups) == 0:
+            #self.power_ups.append(Shield())
         
         for power_up in self.power_ups:
             power_up.update(game.game_speed,self.power_ups)
 
             #add code to colision
             if game.player.dino_rect.colliderect(power_up.rect):
+                power_up.start_time = pygame.time.get_ticks()
+                
                 game.player.has_shield = True
                 game.player.has_power_up = True
                 game.player.type = power_up.type
@@ -26,3 +40,4 @@ class PowerUpManager:
 
     def reset_power_up(self):
         self.power_ups = []
+        self.to_appears = 0
