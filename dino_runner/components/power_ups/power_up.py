@@ -1,9 +1,8 @@
 import pygame
 from pygame.sprite import (Sprite)
-from dino_runner.utils.constants import SCREEN_WIDTH, SHIELD_TYPE
+from dino_runner.utils.constants import SCREEN_WIDTH
 import random
 
-Y_POS = 200
 
 class PowerUp(Sprite):
     def __init__(self, image, type):

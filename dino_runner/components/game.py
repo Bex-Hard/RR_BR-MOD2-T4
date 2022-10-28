@@ -27,7 +27,6 @@ class Game:
         self.obstacle_manager = ObstacleManager()
         self.power_up_manager = PowerUpManager()
 
-        #self.shield_count = False
         self.score = 0
         self.count_death = 0
         self.game_speed = GAME_SPEED
